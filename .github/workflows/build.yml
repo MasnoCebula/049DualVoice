@@ -21,14 +21,30 @@ jobs:
       run: |
         mkdir build
         dotnet new classlib -n PluginBuild
+
+        # Kopiujemy pliki pluginu
         cp Plugin.cs PluginBuild/Plugin.cs
         cp Config.cs PluginBuild/Config.cs
         cp Exiled.Events.dll PluginBuild/Exiled.Events.dll
 
         cd PluginBuild
 
-        dotnet add reference Exiled.Events.dll
-        dotnet add package Microsoft.NETFramework.ReferenceAssemblies
+        # Nadpisujemy csproj poprawną wersją
+        cat > PluginBuild.csproj << 'EOF'
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Exiled.Events">
+      <HintPath>Exiled.Events.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
+EOF
 
         dotnet build -c Release
 
