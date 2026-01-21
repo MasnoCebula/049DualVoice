@@ -27,10 +27,7 @@ jobs:
 
         cd PluginBuild
 
-        # Dodajemy referencję do EXILED
         dotnet add reference Exiled.Events.dll
-
-        # Dodajemy referencje do .NET Framework (EXILED tego wymaga)
         dotnet add package Microsoft.NETFramework.ReferenceAssemblies
 
         dotnet build -c Release
@@ -38,7 +35,7 @@ jobs:
         cp bin/Release/net8.0/*.dll ../build/
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: PluginDLL
         path: build/*.dll
