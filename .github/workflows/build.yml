@@ -1,4 +1,4 @@
-name: Build Plugin
+name: Build EXILED Plugin
 
 on:
   push:
@@ -21,12 +21,20 @@ jobs:
       run: |
         mkdir build
         dotnet new classlib -n PluginBuild
-        cp Plugin.cs PluginBuild/Class1.cs
-        cp Config.cs PluginBuild/
-        cp Exiled.Events.dll PluginBuild/
+        cp Plugin.cs PluginBuild/Plugin.cs
+        cp Config.cs PluginBuild/Config.cs
+        cp Exiled.Events.dll PluginBuild/Exiled.Events.dll
+
         cd PluginBuild
+
+        # Dodajemy referencję do EXILED
+        dotnet add reference Exiled.Events.dll
+
+        # Dodajemy referencje do .NET Framework (EXILED tego wymaga)
         dotnet add package Microsoft.NETFramework.ReferenceAssemblies
+
         dotnet build -c Release
+
         cp bin/Release/net8.0/*.dll ../build/
 
     - name: Upload artifact
