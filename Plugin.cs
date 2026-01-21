@@ -25,15 +25,14 @@ namespace SCP049DualVoice
 
         private void OnVoiceChatting(VoiceChattingEventArgs ev)
         {
-            // Tylko SCP-049 ma podwójny głos
             if (ev.Player.Role != RoleTypeId.Scp049)
                 return;
 
-            // V = normalny lokalny głos (nic nie zmieniamy)
+            // V = normalny lokalny głos
             if (ev.VoiceChannel == VoiceChatChannel.Proximity)
                 return;
 
-            // Q = SCP Chat (bez zmian)
+            // Q = SCP Chat
             if (ev.VoiceChannel == VoiceChatChannel.ScpChat)
                 return;
         }
