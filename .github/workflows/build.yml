@@ -1,0 +1,36 @@
+name: Build Plugin
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Install .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Build plugin
+      run: |
+        mkdir build
+        dotnet new classlib -n PluginBuild
+        cp Plugin.cs PluginBuild/Class1.cs
+        cp Config.cs PluginBuild/
+        cp Exiled.Events.dll PluginBuild/
+        cd PluginBuild
+        dotnet add package Microsoft.NETFramework.ReferenceAssemblies
+        dotnet build -c Release
+        cp bin/Release/net8.0/*.dll ../build/
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: PluginDLL
+        path: build/*.dll
